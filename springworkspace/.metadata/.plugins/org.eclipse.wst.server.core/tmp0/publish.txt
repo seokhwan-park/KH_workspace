@@ -1,2 +1,0 @@
-#Tomcat publish data
-#Tue Oct 06 20:30:42 KST 2020
