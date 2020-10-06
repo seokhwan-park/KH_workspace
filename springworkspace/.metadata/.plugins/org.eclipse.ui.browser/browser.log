@@ -1,0 +1,18 @@
+
+9월 24, 2020 17:00:56.85 NEW SESSION
+9월 24, 2020 17:00:56.85 [21844:17112:0924/170056.847:ERROR:media_history_store.cc(363)] Failed to create or update the media history store.
+9월 25, 2020 24:46:42.54 [21844:6760:0925/004642.542:ERROR:socket_stream.cc(219)] Closing stream with result -2
+
+9월 28, 2020 16:15:42.22 NEW SESSION
+9월 28, 2020 16:15:42.22 [2012:19484:0928/161542.223:ERROR:media_history_store.cc(363)] Failed to create or update the media history store.
+9월 28, 2020 16:15:51.78 [2012:9496:0928/161551.785:ERROR:device_event_log_impl.cc(208)] [16:15:51.785] Bluetooth: bluetooth_adapter_winrt.cc:1074 Getting Default Adapter failed.
+9월 28, 2020 22:27:32.89 [2012:13104:0928/222732.895:ERROR:socket_stream.cc(219)] Closing stream with result -2
+9월 29, 2020 24:08:39.41 [2012:13104:0929/000839.416:ERROR:socket_stream.cc(219)] Closing stream with result -2
+9월 29, 2020 24:08:41.97 [2012:13104:0929/000841.975:ERROR:connection_factory_impl.cc(428)] Failed to connect to MCS endpoint with error -106
+9월 29, 2020 24:08:42.12 [2012:13104:0929/000842.128:ERROR:connection_factory_impl.cc(428)] Failed to connect to MCS endpoint with error -106
+9월 29, 2020 02:23:56.37 [2012:13104:0929/022356.372:ERROR:socket_stream.cc(219)] Closing stream with result -2
+9월 29, 2020 13:06:32.70 [2012:15500:0929/130632.701:ERROR:get_updates_processor.cc(258)] PostClientToServerMessage() failed during GetUpdates with error 2
+9월 29, 2020 13:06:33.58 [2012:13104:0929/130633.582:ERROR:socket_stream.cc(219)] Closing stream with result -2
+9월 29, 2020 13:06:35.84 [2012:13104:0929/130635.847:ERROR:connection_factory_impl.cc(428)] Failed to connect to MCS endpoint with error -106
+9월 29, 2020 13:06:44.43 [2012:13104:0929/130644.431:ERROR:connection_factory_impl.cc(428)] Failed to connect to MCS endpoint with error -105
+9월 29, 2020 15:48:28.92 [19288:20420:0929/154828.925:ERROR:media_history_store.cc(363)] Failed to create or update the media history store.

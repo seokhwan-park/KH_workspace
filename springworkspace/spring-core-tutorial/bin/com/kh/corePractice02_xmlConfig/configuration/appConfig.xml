@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	
+<!-- 	<context:component-scan base-package="com.kh.corePractice02_xmlConfig"/> -->
+
+	<!-- 스캐닝으로 해결하는 부분 -->
+	<context:component-scan base-package="com.kh.corePractice02_xmlConfig">
+		
+		<!-- 
+			exclude : 제외하겠다.
+			include : 포함시키겠다.
+		 -->
+		
+		  
+		<context:include-filter type="regex" 
+		expression="com.kh.corePractice02_xmlConfig.*Dao,com.kh.corePractice02_xmlConfig.*Service"/>
+		
+		 
+		<!-- *Dao : %처럼 ~~~Dao인 애들은 모두 포함시키겠다. -->
+		
+ 		<!--
+		<context:exclude-filter type="annotation" 
+		expression="org.springframework.stereotype.Component"/>
+		 -->
+		<!--  			
+ 		<context:exclude-filter type="assignable" 
+ 		expression="com.kh.corePractice02_xmlConfig.MemberDao"/>
+		 -->
+	</context:component-scan>
+	<!-- MemberDao를 스캐닝해서 제외했기 때문에 빈을 찾지 못해서 에러가 발생한다. -->
+	
+	
+	
+	
+	
+	
+	<!-- 직접 빈을 생성하면 에러가 해결된다. -->
+	<!-- <bean id="memberDao" class="com.kh.corePractice02_xmlConfig.MemberDaoImpl"/>
+	 -->
+</beans>
