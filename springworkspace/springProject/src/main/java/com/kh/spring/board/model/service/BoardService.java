@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.kh.spring.board.model.vo.Board;
 import com.kh.spring.board.model.vo.PageInfo;
+import com.kh.spring.board.model.vo.Reply;
 
 public interface BoardService {
 
@@ -68,7 +69,36 @@ public interface BoardService {
 	 * @return
 	 */
 	int deleteBoard(int bId);
+
+
+	/**
+	 * 6. 게시글 TOP5 조회
+	 * @return
+	 */
+	ArrayList<Board> selectTopList();
+
+
+	
+	
+	/**
+	 * 7. 댓글 목록 조회
+	 * @param bId
+	 * @return
+	 */
+	ArrayList<Reply> selectReplyList(int bId);
+
+
+	
+	/**
+	 * 8. 댓글 등록
+	 * @param r
+	 * @return
+	 */
+	int insertReply(Reply r);
+
+	
 }
+
 
 
 

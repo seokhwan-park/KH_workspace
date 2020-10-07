@@ -1,21 +1,33 @@
 package com.kh.spring.board.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.board.model.vo.Board;
 import com.kh.spring.board.model.vo.PageInfo;
+import com.kh.spring.board.model.vo.Reply;
 import com.kh.spring.common.Pagination;
 
 @Controller
@@ -200,6 +212,124 @@ public class BoardController {
 			return "common/errorPage";
 		}
 	}
+	
+	
+	/**
+	 * 1. Stream을 이용해서 json배열 보내기
+	 * @param response
+	 * @throws IOException 
+	 */
+//	@RequestMapping("topList.do")
+//	public void boardTopList(HttpServletResponse response) throws IOException {
+//		response.setContentType("application/json; charset=utf-8");
+//		
+//		ArrayList<Board> list = bService.selectTopList();
+//		
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		
+//		JSONArray jArr = new JSONArray();
+//		for(Board b : list) {
+//			JSONObject jObj = new JSONObject();
+//			jObj.put("bId", b.getbId());
+//			jObj.put("bTitle", b.getbTitle());
+//			jObj.put("bWriter", b.getbWriter());
+//			jObj.put("originalFileName", b.getOriginalFileName());
+//			jObj.put("bCount", b.getbCount());
+//			jObj.put("bCreateDate", sdf.format(b.getbCreateDate()));
+//			
+//			jArr.add(jObj);
+//		}
+//		
+//		PrintWriter out = response.getWriter();
+//		out.print(jArr);
+//	}
+	
+	
+	
+	/**
+	 * 2. Gson(Google + json)을 이용해서
+	 * @param response
+	 * @throws IOException 
+	 * @throws JsonIOException 
+	 */
+//	@RequestMapping("topList.do")
+//	public void boardTopList(HttpServletResponse response) throws JsonIOException, IOException {
+//		response.setContentType("application/json; charset=utf-8");
+//		
+//		ArrayList<Board> list = bService.selectTopList();
+//		
+//		// Gson도 날짜에 대해서는 날짜포맷을 변경시켜줘야한다.
+//		// Gson객체의 속성값을 변경하고자 하면 GsonBuilder()를 통해서 변경을 한다.
+//		// Gson은 객체를 정의하면 알아서 객체로 인식하고 속성값을 정의해준다.
+//		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+//		gson.toJson(list,response.getWriter());
+//	}
+	
+	/*
+	 *	3. jackson ObjectMapper를 이용하는 방식
+	 *	   jackson은 java JSON 라이브러리이고 jackson 라이브러리는 ObjectMapper, JsonGenerator에 의존한다.
+	 *	    
+	 * 	   * jackson 방법
+	 * 		1. @ResponseBody 붙이고 반환값을 String으로 두고 ObjectMapper를 이용해서 list를 String으로 반환하는 방법
+	 * 		2. 반환값을 list로 두고 list자체를 반환하는 방법
+	 * 		   --> xml에 MessageConverter 관련 bean을 등록해서 사용해야한다.(자바 객체를 자바스크립트 객체로 바꿔주는 작업을 도와준다.)
+	 * 		 
+	 */
+	
+	/**
+	 * 3. jackson을 이용한 방법
+	 * @return
+	 * @throws JsonProcessingException 
+	 */
+	@ResponseBody
+	@RequestMapping(value="topList.do",produces="application/json; charset=utf-8")                     
+	public String boardTopList() throws JsonProcessingException {
+		ArrayList<Board> list = bService.selectTopList();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		mapper.setDateFormat(sdf);		// 위에서 사용한 create와 동일한 기능을 한다.
+		
+		String jsonStr = mapper.writeValueAsString(list);
+		
+		return jsonStr;
+	}
+	
+	
+	/**
+	 * 게시글 댓글 목록 조회
+	 * @param response
+	 * @param bId
+	 * @throws IOException 
+	 * @throws JsonIOException 
+	 */
+	@RequestMapping("rList.do")
+	public void getReplyList(HttpServletResponse response, int bId) throws JsonIOException, IOException {
+		ArrayList<Reply> rList=bService.selectReplyList(bId);
+		
+		response.setContentType("application/json; charset=utf-8");
+		
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		gson.toJson(rList,response.getWriter());
+		
+		
+	}
+	
+	// contenttype, print 같은거 안쓰려고.. responseBody
+	@ResponseBody
+	@RequestMapping("addReply.do")
+	public String addReply(Reply r) {
+		
+		int result = bService.insertReply(r);
+		
+		if(result > 0) {
+			return "success";
+		}else {
+			return "fail";
+		}
+	}
+	
 }
 
 

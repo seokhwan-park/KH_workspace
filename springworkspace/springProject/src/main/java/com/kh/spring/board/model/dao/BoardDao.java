@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.spring.board.model.vo.Board;
 import com.kh.spring.board.model.vo.PageInfo;
+import com.kh.spring.board.model.vo.Reply;
 
 @Repository("bDao")
 public class BoardDao {
@@ -56,6 +57,21 @@ public class BoardDao {
 	public int deleteBoard(int bId) {
 
 		return sqlSession.delete("boardMapper.deleteBoard", bId);
+	}
+
+
+	public ArrayList<Board> selectTopList() {
+		return (ArrayList)sqlSession.selectList("boardMapper.selectTopList");
+	}
+
+
+	public ArrayList<Reply> selectReplyList(int bId) {
+		return (ArrayList)sqlSession.selectList("boardMapper.selectReplyList", bId);
+	}
+
+
+	public int insertReply(Reply r) {
+		return sqlSession.insert("boardMapper.insertReply", r);
 	}
 
 }

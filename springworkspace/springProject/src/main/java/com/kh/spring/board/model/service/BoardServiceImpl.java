@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kh.spring.board.model.dao.BoardDao;
 import com.kh.spring.board.model.vo.Board;
 import com.kh.spring.board.model.vo.PageInfo;
+import com.kh.spring.board.model.vo.Reply;
 
 @Service("bService")
 public class BoardServiceImpl implements BoardService {
@@ -63,6 +64,21 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int deleteBoard(int bId) {
 		return bDao.deleteBoard(bId);
+	}
+
+	@Override
+	public ArrayList<Board> selectTopList() {
+		return bDao.selectTopList();
+	}
+
+	@Override
+	public ArrayList<Reply> selectReplyList(int bId) {
+		return bDao.selectReplyList(bId);
+	}
+
+	@Override
+	public int insertReply(Reply r) {
+		return bDao.insertReply(r);
 	}
 
 }
