@@ -1,10 +1,9 @@
 package com.kh.spring.member.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletResponse;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,6 +18,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.kh.spring.member.model.service.MemberService;
 import com.kh.spring.member.model.vo.Member;
 
+
+
+
 @SessionAttributes("loginUser")
 @Controller
 public class MemberController {
@@ -29,6 +31,10 @@ public class MemberController {
 	// 암호화 처리
 	@Autowired
 	private BCryptPasswordEncoder bcryPasswordencoder;
+	
+//	@Autowired
+	private Logger logger = LoggerFactory.getLogger(MemberController.class);
+
 	
 	// [ 파라미터를 전송받는 방법 ]
 	
@@ -216,9 +222,22 @@ public class MemberController {
 		return "redirect:home.do";
 	}
 	
+	/**
+	 * @param m
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value="login.do", method=RequestMethod.POST)
 	public String memberLogin(Member m, Model model) {
 		
+		logger.info("로그인 확인");
+		
+		// 프로젝트 배포 시에 성능 저하를 막기위해 logger의 레벨이 DEBUG여부를 확인하는 조건문 제시
+		if(logger.isDebugEnabled()) {
+			logger.debug("로그인 확인 - debug");
+		}
+		
+
 		// 로그인 처리
 		Member loginUser = mService.loginMember(m);
 		

@@ -104,7 +104,7 @@
    						rWriter:rWriter
    					},
    					type:"post",
-   					success:function(data){	  		// 댓글등록 성공 시 : succecc, 댓글 등록 실패 시 : fail
+   					success:function(data){	  		// 댓글등록 성공 시 : success, 댓글 등록 실패 시 : fail
    						if(data == "success"){
    							getReplyList();			// 등록 성공 시 다시 댓글 리스트 불러오기
    							$("#rContent").val("");	// 댓글 등록시에 사용한 댓글 내용 초기화
