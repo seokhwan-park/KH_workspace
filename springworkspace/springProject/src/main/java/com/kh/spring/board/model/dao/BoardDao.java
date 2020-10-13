@@ -17,61 +17,45 @@ public class BoardDao {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
+	
 	public int getListCount() {
 		return sqlSession.selectOne("boardMapper.getListCount");
 	}
 
-	
 	public ArrayList<Board> selectList(PageInfo pi) {
-		int offset = (pi.getCurrentPage()-1) * pi.getBoardLimit();
+		int offset = (pi.getCurrentPage() -1) * pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset,pi.getBoardLimit());
-		
-		return (ArrayList)sqlSession.selectList("boardMapper.selectList",null,rowBounds);	// 매개변수로 따로 필요한것이 없다!
+		return (ArrayList)sqlSession.selectList("boardMapper.selectList",null,rowBounds);
 	}
 
-	
 	public int updateCount(int bId) {
-		
 		return sqlSession.update("boardMapper.updateCount",bId);
 	}
 
-
 	public Board selectBoard(int bId) {
-
 		return sqlSession.selectOne("boardMapper.selectBoard",bId);
 	}
 
-
 	public int insertBoard(Board b) {
-
 		return sqlSession.insert("boardMapper.insertBoard",b);
 	}
 
-
 	public int updateBoard(Board b) {
-		
-		return sqlSession.update("boardMapper.updateBoard", b);
+		return sqlSession.update("boardMapper.updateBoard",b);
 	}
-
 
 	public int deleteBoard(int bId) {
-
-		return sqlSession.delete("boardMapper.deleteBoard", bId);
+		return sqlSession.delete("boardMapper.deleteBoard",bId);
 	}
-
-
-	public ArrayList<Board> selectTopList() {
+	public ArrayList<Board> selectTopList(){
 		return (ArrayList)sqlSession.selectList("boardMapper.selectTopList");
 	}
 
-
 	public ArrayList<Reply> selectReplyList(int bId) {
-		return (ArrayList)sqlSession.selectList("boardMapper.selectReplyList", bId);
+		return (ArrayList)sqlSession.selectList("boardMapper.selectReplyList",bId);
 	}
-
 
 	public int insertReply(Reply r) {
-		return sqlSession.insert("boardMapper.insertReply", r);
+		return sqlSession.insert("boardMapper.insertReply",r);
 	}
-
 }

@@ -3,7 +3,7 @@ package com.kh.spring.board.model.vo;
 import java.sql.Date;
 
 public class Reply {
-
+	
 	private int rId;
 	private String rContent;
 	private int refBid;
@@ -14,7 +14,6 @@ public class Reply {
 	
 	public Reply() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Reply(int rId, String rContent, int refBid, String rWriter, Date rCreateDate, Date rModifyDate,
@@ -90,7 +89,4 @@ public class Reply {
 		return "Reply [rId=" + rId + ", rContent=" + rContent + ", refBid=" + refBid + ", rWriter=" + rWriter
 				+ ", rCreateDate=" + rCreateDate + ", rModifyDate=" + rModifyDate + ", rStatus=" + rStatus + "]";
 	}
-	
-	
-	
 }

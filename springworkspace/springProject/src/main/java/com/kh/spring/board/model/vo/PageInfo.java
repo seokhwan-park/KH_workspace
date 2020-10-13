@@ -1,7 +1,6 @@
 package com.kh.spring.board.model.vo;
 
 public class PageInfo {
-
 	private int currentPage;
 	private int listCount;
 	private int pageLimit;
@@ -13,7 +12,6 @@ public class PageInfo {
 
 	public PageInfo() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public PageInfo(int currentPage, int listCount, int pageLimit, int maxPage, int startPage, int endPage,
@@ -90,6 +88,5 @@ public class PageInfo {
 				+ ", maxPage=" + maxPage + ", startPage=" + startPage + ", endPage=" + endPage + ", boardLimit="
 				+ boardLimit + "]";
 	}
-	
 	
 }

@@ -5,7 +5,7 @@
 		<setting name="jdbcTypeForNull" value="NULL"/>
 	</settings>
 	
-	<!--  typeAliases -->
+	<!-- typeAliases -->
 	<typeAliases>
 		<typeAlias type="com.kh.spring.member.model.vo.Member" alias="Member"/>
 		<typeAlias type="com.kh.spring.board.model.vo.Board" alias="Board"/>
@@ -16,4 +16,5 @@
 		<mapper resource="mappers/member-mapper.xml"/>
 		<mapper resource="mappers/board-mapper.xml"/>
 	</mappers>
+	
 </configuration>

@@ -1,78 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- 
-		root-context.xml 파일은 서버 구동 시 web.xml을 거쳐 바로 로딩 되는 
+		root-context.xml 파일은 서버 구동 시 web.xml을 거쳐 바로 로딩 되는
 		pre-loading되는 설정 파일이다.
 		따라서 서버 구동 시 바로 셋팅 해야 되는 내용들을 작성하는 설정 파일로
-		보통 DB연결 설정, 트랜잭션 처리, AOP 관련, 내외부 모듈연동등등
+		보통 DB연결 설정,트랜잭션 처리, AOP 관련, 내외부 모듈연동등등
 		스프링에서 제공하는 서비스들에 대한 설정들을 관리한다.
 	 -->
 	 
-	 <!-- 기존에 mybatis=config.xml에 작성했던 DB정보 관련 부분 여기에 작성한다.
+	 <!-- 기존에 mybatis-config.xml에 작성했던 DB정보 관련 부분 여기에 작성한다.
 	 	  Why? 서버 구동됨과 동시에 이루어지게끔
 	 	  
-	 	  ==========================================================
+	 	 ======================================================
+	 	  1. DataSource 등록 
 	 	  
-	 	  1. DataSource 등록
-	 	  
-	 	  destroy-method는 주어진 세션을 자동으로 close하라는 의미
+	 	  destroy-method는 주어진 세션을 자동으로 close 하라는 의미
 	  -->
-	  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-	  	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
-	  	<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-	  	<property name="username" value="spring"/>
-	  	<property name="password" value="spring"/>
-	  	<property name="defaultAutoCommit" value="false"/>
-	  </bean>
-	  
-	  <bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
-	  	<!-- mybatis-config.xml 설정 불러온다. -->
-	  	<property name="configLocation" value="classpath:mybatis-config.xml"></property>
-	  	<property name="dataSource" ref="dataSource"/>
-	  </bean>
-	  
-	  <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-	  	<constructor-arg ref="sqlSession"/>
-	  </bean>
-	  
-	  
-	  <!-- 
-	  		pom.xml에 파일업로드 관련 mapper등록하고 나서 bean객체 등록해주어야 한다! 
-	  		파일 업로드 시 사용
-	  		MultipartResolver
-	  		CommonsMultipartResolver 빈을 설정하여 파일 업로드를 처리한다.
-	  		JSP파일의 form태그안에 enctype을 multipart/form-data 설정, method 타입을 post로 설정
-	  		(commons-fileupload, commons-io jar파일이 있어야 한다. pom.xml에 추가해준 2가지)
-	  		
-	  		maxUploadSize : 최대 업로드 가능한 바이트 크기, 기본값은 -1 (-1의 의미는 제한이 없음을 의미한다.)
-      		maxInMemorySize : 디스크에 임시파일을 생성하기 전에 메모리에 보관할 수 있는 최대 바이트 크기, 기본값은 1024바이트이다.
-	  		
+	 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	 	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+	 	<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+	 	<property name="username" value="spring"/>
+	 	<property name="password" value="spring"/>
+	 	<property name="defaultAutoCommit" value="false"/>
+	 </bean>
+	 
+	 <bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+	     <!-- mybatis-config.xml 설정 불러온다. -->
+	 	<property name="configLocation" value="classpath:mybatis-config.xml"/>
+	 	<property name="dataSource" ref="dataSource"/>
+	 </bean>
+	 
+	 <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+	 	<constructor-arg ref="sqlSession"/>
+	 </bean>
+	 
+	 <!-- 트랜잭션 처리 -->
+	 <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	 	<property name="dataSource" ref="dataSource"/>
+	 </bean>
+	 
+	 
+	 <!-- tx:advice 트랜잭션을 적용할 때 사용(공통코드 적용할 때 사용) -->
+	 <tx:advice id="txAdvice" transaction-manager="transactionManager">
+	 	<tx:attributes>
+	 		<!--
+				select가 들어간 모든 method에 read-only(읽기전용)을 true로 준다. 즉, 조회만 가능! insert, update, delete가 허용되지 않는다.
+				만약 insert, update, delete가 사용되면 에러가 발생한다.
+				Exception에 대해서는 rollback을 선언한다.
+				prpagation : required이면 트랜잭션이 생성될때 새롭게 만든다.
+				isolation : 격리레벨 -> 사용되는 트랜잭션에 대한 값들이 맞는지 확인
+	 		 -->
+	 		<tx:method name="select*" read-only="true" rollback-for="Exception"/>
+	 		<tx:method name="insert*" rollback-for="Exception" propagation="REQUIRED" isolation="SERIALIZABLE"/>
+	 		<tx:method name="update*" rollback-for="Exception" propagation="REQUIRED" isolation="SERIALIZABLE"/>
+	 		<tx:method name="delete*" rollback-for="Exception" propagation="REQUIRED" isolation="SERIALIZABLE"/>
+	 	</tx:attributes>
+	 </tx:advice>
+	 
+	 <!-- AOP를 이용하여 txAdvice를 적용시키기 위해 아래의 내용을 추가한다. -->
+	 <aop:config proxy-target-class="true">
+	 	<aop:pointcut expression="execution(* com.kh.spring..*ServiceImpl.*(..))" id="serviceMethod"/>
+	 	
+	 	<!-- advice-ref : 만들어놓은 advice객체를 참고해서 쓰겠다! -->
+	 	<!-- pointcut-ref : 만들어놓은 pointcut객체를 참고해서 쓰겠다! -->
+	 	<aop:advisor advice-ref="txAdvice" id="transactionAdvisor" pointcut-ref="serviceMethod"/>
+	 </aop:config>
+	 
+	 <!-- 만들어주고 난 다음 servlet-context에 추가!! -->
+	 
+	 <!-- 
+	 	파일 업로드 시 사용
+	 	MultipartResolver
+	 	CommonsMultipartresolver 빈을 설정하여 파일 업로드를 처리한다.
+	 	MiltipartFIle클래스를 이용하여 럽로드한 파일 정보를 얻어온다
+	 	JSP 파일의 form 태그 안에 encrypte을 multipart/form-data 설정, method타입을 post로 설정 
+	 	(commons-fileupload, commons-io jar파일이 있어야 한다.)
+	 	maxUploadsize : 최대 업로드 가능한 바이트 크기, 기본값은 -1 (-1의 의미는 제한이 없음을 의미한다.)
+	 	maxInMemorySize : 디스크에 임시파일을 생성하기 전에 메모리에 보관할 수 있는 최대 바이트 크기, 기본값은 10240바이트 이타.
 	  -->
-	  
-	   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-	       <property name="maxUploadSize" value="100000000"/>
-	       <property name="maxInMemorySize" value="100000000"/>
-       </bean>
-	  
-	  
+	  <bean id="multipartResolver"
+	  	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	  		<property name="maxUploadSize" value="100000000"/>
+	  		<property name="maxInMemorySize" value="100000000"/>
+	  	</bean>
 </beans>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -12,8 +12,7 @@
 	
 	<h1 align="center">게시글 작성하기</h1>
 	<br>
-	
-	<!-- 첨부파일을 등록할려고하니 속성값에 method="post" enctype="multipart/form-data" 꼭 지정하자 -->
+	<!-- 첨부파일을 등록하려고 하니 속성값에[ method="post" enctype="multipart/form-data" 꼭 지정하자  -->
 	<form action="binsert.do" method="post" enctype="multipart/form-data">
 		
 		<table align="center" id="tb">
