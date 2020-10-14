@@ -23,13 +23,13 @@
 		<tbody></tbody>
 	</table>
 	<script type="text/javascript">
-		$(function() {
+		/* $(function() {
 			topList();
 			setInterval(function() {
 				topList();
 			}, 3000);
 		
-		});
+		}); */
 		$(function() {
 			topList();
 		});

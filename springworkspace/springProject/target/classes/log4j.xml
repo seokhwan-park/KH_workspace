@@ -164,6 +164,20 @@
 		<level value="debug"/>
 		<appender-ref ref="myConsole"/>
 	</logger>
+
+	<logger name="com.kh.spring.common.aop.AroundAspect" additivity="false">
+		<!-- logger은 어디에 쓸건지 지칭하는내용 -->
+		<!-- appender은 출력방식!! -->
+		<level value="debug"/>
+		<appender-ref ref="myConsole"/>
+	</logger>
+
+	<logger name="com.kh.spring.common.aop.AfterReturningAspect" additivity="false">
+		<!-- logger은 어디에 쓸건지 지칭하는내용 -->
+		<!-- appender은 출력방식!! -->
+		<level value="debug"/>
+		<appender-ref ref="myConsole"/>
+	</logger>
 	
 	
 	<!-- interceptor -->
